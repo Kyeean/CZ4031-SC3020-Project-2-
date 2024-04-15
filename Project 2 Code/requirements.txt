@@ -1,0 +1,5 @@
+ttkbootstrap
+graphviz
+mo_sql_parsing
+deepdiff
+psycopg2

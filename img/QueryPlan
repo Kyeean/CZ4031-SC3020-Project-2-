@@ -1,0 +1,7 @@
+digraph {
+	graph [bgcolor=white]
+	node [color=black fillcolor=lightblue style=filled]
+	6068470349117945135 [label="Seq Scan (Cost: 11.70)
+Relation Name: region" shape=box]
+	node [shape=box]
+}
