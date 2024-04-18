@@ -1,4 +1,4 @@
-# CZ4031-DBMS-Group-19
+# CZ4031/SC3020 Project 2
 Project repository for CZ4031 Database System Design Project 2
 
 # Running the code
