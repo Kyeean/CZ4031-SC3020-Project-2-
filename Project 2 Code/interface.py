@@ -97,22 +97,24 @@ class Application(ttk.Window):
         self.tabs_holders.add(self.query_container, text="Query Plan")
 
         self.postgresql_subframe = ttk.Frame(self.query_container, borderwidth=0)
-        self.theory_subframe2 = ttk.Frame(self.query_container, borderwidth=0)
+        #self.theory_subframe2 = ttk.Frame(self.query_container, borderwidth=0)
 
         self.postgresql_query_plan_label = Label(self.postgresql_subframe, text="PostgreSQL Analysis:", font=FONT_UNDERLINE)
         self.postgresql_query_plan_label.configure(background='#2C3143', foreground='white')
-        self.postgresql_query_plan_label.pack(padx=20, pady=20, expand=True, fill=BOTH)
+        self.postgresql_query_plan_label.pack(padx=0, pady=0, expand=True, fill=BOTH)
         self.postgresql_query_plan_text = Text(self.postgresql_subframe, width=40, height=50, wrap="word")
-        self.postgresql_query_plan_text.pack(padx=10, pady=10, expand=True, fill=BOTH)
+        self.postgresql_query_plan_text.pack(padx = 10, pady= 10, expand=True, fill=BOTH)
 
+        """
         self.theory_query_plan_label = Label(self.theory_subframe2, text="Theoretical Analysis:", font=FONT_UNDERLINE)
         self.theory_query_plan_label.configure(background='#2C3143', foreground='white')
         self.theory_query_plan_label.pack(padx=20, pady=20, expand=True, fill=BOTH)
         self.theory_query_plan_text = Text(self.theory_subframe2, width=40, height=50, wrap="word")
         self.theory_query_plan_text.pack(padx=10, pady=10, expand=True, fill=BOTH)
+        """
 
         self.postgresql_subframe.pack(expand=True, fill=BOTH, side=LEFT)
-        self.theory_subframe2.pack(expand=True, fill=BOTH, side=LEFT)
+        #self.theory_subframe2.pack(expand=True, fill=BOTH, side=LEFT)
 
         # Analysis Tab
 
@@ -152,16 +154,19 @@ class Application(ttk.Window):
 
         self.port_label = ttk.Label(self.login_window, text="Port:")
         self.port_entry = ttk.Entry(self.login_window)
-        self.port_entry.insert(0, '5432')
+        self.port_entry.insert(0, '5433')
 
         self.database_label = ttk.Label(self.login_window, text="Database:")
         self.database_entry = ttk.Entry(self.login_window)
+        self.database_entry.insert(0,'TPC-H')
 
         self.user_label = ttk.Label(self.login_window, text="User:")
         self.user_entry = ttk.Entry(self.login_window)
+        self.user_entry.insert(0, 'ernest')
 
         self.password_label = ttk.Label(self.login_window, text="Password:")
         self.password_entry = ttk.Entry(self.login_window, show="*")
+        self.password_entry.insert(0,'wxaa12')
 
         self.login_button = ttk.Button(self.login_window, text="Login", command=self.login)
 
