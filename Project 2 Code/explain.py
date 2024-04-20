@@ -218,29 +218,21 @@ class CalculateCost:
         return totalCost
             
     # Print cost comparison in readable format
-    def printCost(self,initialPlan,newPlan):
+    def printCost(self,plan):
         '''
          Prints the cost of the query. This is used to determine how much it would cost to execute in the new query.
          
          Args:
-         	 initialPlan(str): The initial query that is being executed.
-         	 newPlan(str): The new query that is being executed.
+         	 Plan(str): The query that is being executed.
+
          
          Returns: 
          	 A string that is the overall cost of the query and written to compare both initial and new plan in a readable format.
         '''
 
-        total_initial_cost = self.calculateCost(initialPlan)
-        total_new_cost = self.calculateCost(newPlan)
-        
-        # The overall cost of executing the query is higher than total_initial_cost.
-        if total_new_cost < total_initial_cost:
-            total_initial_cost_string = f"The total cost has reduced from {total_initial_cost} in the initial plan to {total_new_cost} in the new plan. This means that the overall cost of executing the query is lower in the new plan, which should result in faster execution times.\n"
-            return str(total_initial_cost_string)
-        
-        else:
-            total_initial_cost_string = f"The total cost has increased from {total_initial_cost} in the initial plan to {total_new_cost} in the new plan. This means that the overall cost of executing the query is higher in the new plan, which should result in slower execution times.\n"
-            return str(total_initial_cost_string)
+        total_cost = self.calculateCost(plan)
+        total_cost_string = f"\nThe estimated cost of this plan is {total_cost}.\n"
+        return str(total_cost_string)
 
     
 class Comparison:

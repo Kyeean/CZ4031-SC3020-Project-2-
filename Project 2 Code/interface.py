@@ -276,37 +276,64 @@ class Application(ttk.Window):
                 self.analysis_text.config(state="normal")
                 self.analysis_text.insert(END, "Analysis:\n", ("title",))
 
-                analysis = db.execute_analyse(query)
-                #test = self.print_analysis(self.analysis_text, query)
-                for i in analysis:
-                    self.analysis_text.insert(END, i[0] + '\n', ("body",))
+                #analysis = db.execute_analyse(query)
+                self.printAnalysis(QueryPlan)
+                cost = explain.CalculateCost().printCost(QueryPlan)
+                self.analysis_text.insert(END, cost, ("body",))
+                #for i in analysis:
+                    #for j in i:
+                        #jstring = str(j)
+                        #self.analysis_text.insert(END, jstring + "\n", ("body",))
 
                 self.analysis_text.tag_configure("title", font=title_font, underline=True)
                 self.analysis_text.tag_configure("body", font=body_font)
                 self.analysis_text.config(state=DISABLED)
 
-
             except Exception as e:
                 messagebox.showinfo("Warning")
 
-    def print_analysis(self, container, query):
-            
-        try:
+    def printAnalysis(self, query):
 
-            listToReturn = []
-            body_font = font.Font(family="Helvetica", size=12)
-            container.config(state="normal")
+        searchFunction = explain.SearchNode()
+        joinResults, scanResults = searchFunction.searchJoin(query)
+        self.printJoin(joinResults, scanResults, self.analysis_text)
 
-            testprinted = "test"
-            listToReturn.append(testprinted)
-            container.insert(END, testprinted, ("body",))
 
-            self.analysis_text.tag_configure("body", font=body_font)
-            return listToReturn
-        
-        except Exception as e:
-            messagebox.showerror("test")
-    
+    def printJoin(self, join_dict, scan_dict, container):
+        '''
+         Prints out the joins in a query.
+         
+         Args:
+         	 join_dict: Dictionary with the joins as keys and the relation as values
+         	 scan_dict: Dictionary with the relations as keys and the relation as values
+         	 container: Container to insert the relations into.
+         
+         Returns: 
+         	 The string that is displayed in the Analysis tab
+        '''
+
+        body_font = font.Font(family="Helvetica", size=12)
+        container.config(state="normal")
+        joinString = ""
+        # Concatenating the strings together
+        for join in join_dict:
+            try:
+                joinString = f"\n{join[:-1]} was used between '{join_dict[join][0]}'({scan_dict[join_dict[join][0]]}) and '{join_dict[join][1]}'({scan_dict[join_dict[join][1]]})\n"
+                container.insert(END, joinString, ("body",))
+            except Exception as e:
+                try:
+                    joinString = f"\n{join[:-1]} was used between '{join_dict[join][0]}'({scan_dict[join_dict[join][0]]}) and '{join_dict[join][1]}'\n"
+                    container.insert(END, joinString, ("body",))
+
+                except Exception as e:
+                    joinString = f"\n{join[:-1]} was used between '{join_dict[join][0]}' and '{join_dict[join][1]}'\n"
+                    container.insert(END, joinString, ("body",))
+
+        if(joinString == ""):
+            joinString = "\nNo joins are present in this query\n"
+            container.insert(END, joinString, ("body",))
+
+        self.analysis_text.tag_configure("body", font=body_font)
 
     def query_validation(self, query, preprocessor):
         '''
