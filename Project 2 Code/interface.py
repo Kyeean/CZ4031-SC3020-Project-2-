@@ -279,7 +279,7 @@ class Application(ttk.Window):
                 analysis = db.execute_analyse(query)
                 #test = self.print_analysis(self.analysis_text, query)
                 for i in analysis:
-                    self.analysis_text.insert(END, i , ("body",))
+                    self.analysis_text.insert(END, i[0] + '\n', ("body",))
 
                 self.analysis_text.tag_configure("title", font=title_font, underline=True)
                 self.analysis_text.tag_configure("body", font=body_font)
