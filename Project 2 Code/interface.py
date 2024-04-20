@@ -97,22 +97,24 @@ class Application(ttk.Window):
         self.tabs_holders.add(self.query_container, text="Query Plan")
 
         self.postgresql_subframe = ttk.Frame(self.query_container, borderwidth=0)
-        self.theory_subframe2 = ttk.Frame(self.query_container, borderwidth=0)
+        #self.theory_subframe2 = ttk.Frame(self.query_container, borderwidth=0)
 
-        self.postgresql_query_plan_label = Label(self.postgresql_subframe, text="PostgreSQL Analysis:", font=FONT_UNDERLINE)
+        self.postgresql_query_plan_label = Label(self.postgresql_subframe, text="Query Execution Plan", font=FONT_UNDERLINE)
         self.postgresql_query_plan_label.configure(background='#2C3143', foreground='white')
-        self.postgresql_query_plan_label.pack(padx=20, pady=20, expand=True, fill=BOTH)
-        self.postgresql_query_plan_text = Text(self.postgresql_subframe, width=40, height=50, wrap="word")
-        self.postgresql_query_plan_text.pack(padx=10, pady=10, expand=True, fill=BOTH)
+        self.postgresql_query_plan_label.pack(padx=0, pady=(10,0), expand=True, fill=BOTH)
+        self.postgresql_query_plan_text = Text(self.postgresql_subframe, width=40, height=80, wrap="word")
+        self.postgresql_query_plan_text.pack(padx = 10, pady= 10, expand=True, fill=BOTH)
 
+        """
         self.theory_query_plan_label = Label(self.theory_subframe2, text="Theoretical Analysis:", font=FONT_UNDERLINE)
         self.theory_query_plan_label.configure(background='#2C3143', foreground='white')
         self.theory_query_plan_label.pack(padx=20, pady=20, expand=True, fill=BOTH)
         self.theory_query_plan_text = Text(self.theory_subframe2, width=40, height=50, wrap="word")
         self.theory_query_plan_text.pack(padx=10, pady=10, expand=True, fill=BOTH)
+        """
 
         self.postgresql_subframe.pack(expand=True, fill=BOTH, side=LEFT)
-        self.theory_subframe2.pack(expand=True, fill=BOTH, side=LEFT)
+        #self.theory_subframe2.pack(expand=True, fill=BOTH, side=LEFT)
 
         # Analysis Tab
 
@@ -152,16 +154,19 @@ class Application(ttk.Window):
 
         self.port_label = ttk.Label(self.login_window, text="Port:")
         self.port_entry = ttk.Entry(self.login_window)
-        self.port_entry.insert(0, '5432')
+        self.port_entry.insert(0, '5433')
 
         self.database_label = ttk.Label(self.login_window, text="Database:")
         self.database_entry = ttk.Entry(self.login_window)
+        self.database_entry.insert(0,'TPC-H')
 
         self.user_label = ttk.Label(self.login_window, text="User:")
         self.user_entry = ttk.Entry(self.login_window)
+        self.user_entry.insert(0, 'ernest')
 
         self.password_label = ttk.Label(self.login_window, text="Password:")
         self.password_entry = ttk.Entry(self.login_window, show="*")
+        self.password_entry.insert(0,'wxaa12')
 
         self.login_button = ttk.Button(self.login_window, text="Login", command=self.login)
 
@@ -263,14 +268,23 @@ class Application(ttk.Window):
                 self.postgresql_query_plan_text.delete('1.0', END)
 
                 imgQuery = Image.open(image_path)
+
+                gui_width = self.postgresql_query_plan_text.winfo_width() - 50
+                gui_height = self.postgresql_query_plan_text.winfo_height() - 50
+
+               
+
                 w, h = imgQuery.size
-                ratio = min(self.postgresql_query_plan_text.winfo_width() / w, self.postgresql_query_plan_text.winfo_height() / h)
-                new_size = (int(w * ratio), int(h * ratio))
-                imgQuery = imgQuery.resize(new_size)
+                x_offset = max((gui_width - w) // 2,0)
+                y_offset = max((gui_height - h) // 2,0)
+                if w > gui_width or h > gui_height:
+                    ratio = min(gui_width/w, gui_height/h)
+                    new_size = (int(w * ratio), int(h * ratio))
+                    imgQuery = imgQuery.resize(new_size)
 
                 # Insert image for the query plan
                 self.query_img = ImageTk.PhotoImage(imgQuery)
-                self.postgresql_query_plan_text.image_create(END, image=self.query_img)
+                self.postgresql_query_plan_text.image_create(END, image=self.query_img,padx=x_offset, pady=y_offset)
                 self.postgresql_query_plan_text.config(state=DISABLED)
 
                 self.analysis_text.config(state="normal")
@@ -362,7 +376,7 @@ class Application(ttk.Window):
             child.destroy()  # Clean up sql output
         preprocessor = explain.Preprocessing(self.configList)
 
-        output, columns, analysis = preprocessor.get_query_results(query)
+        output, columns = preprocessor.get_query_results(query)
 
         # Create table in container
         if (output is None or (len(output) == 0)):
