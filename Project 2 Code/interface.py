@@ -234,6 +234,8 @@ class Application(ttk.Window):
 
         # If input query is valid
         if isValid:
+            self.analysis_text.config(state="normal")
+            self.analysis_text.delete('1.0', END)
             try:
                 QueryPlan = preprocessor.get_query_plan(self.query_input)
             except Exception as e:
