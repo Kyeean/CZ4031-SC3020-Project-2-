@@ -99,9 +99,9 @@ class Application(ttk.Window):
         self.postgresql_subframe = ttk.Frame(self.query_container, borderwidth=0)
         #self.theory_subframe2 = ttk.Frame(self.query_container, borderwidth=0)
 
-        self.postgresql_query_plan_label = Label(self.postgresql_subframe, text="PostgreSQL Analysis:", font=FONT_UNDERLINE)
+        self.postgresql_query_plan_label = Label(self.postgresql_subframe, text="Query Execution Plan", font=FONT_UNDERLINE)
         self.postgresql_query_plan_label.configure(background='#2C3143', foreground='white')
-        self.postgresql_query_plan_label.pack(padx=0, pady=0, expand=True, fill=BOTH)
+        self.postgresql_query_plan_label.pack(padx=0, pady=(10,0), expand=True, fill=BOTH)
         self.postgresql_query_plan_text = Text(self.postgresql_subframe, width=40, height=80, wrap="word")
         self.postgresql_query_plan_text.pack(padx = 10, pady= 10, expand=True, fill=BOTH)
 
@@ -349,7 +349,7 @@ class Application(ttk.Window):
             child.destroy()  # Clean up sql output
         preprocessor = explain.Preprocessing(self.configList)
 
-        output, columns, analysis = preprocessor.get_query_results(query)
+        output, columns = preprocessor.get_query_results(query)
 
         # Create table in container
         if (output is None or (len(output) == 0)):
