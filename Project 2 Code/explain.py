@@ -166,6 +166,14 @@ class DBConnection:
         except Exception as e:
             pass
 
+    def execute_analyse(self, query: str):
+        try:
+            self.cur.execute(self.cur.mogrify('explain analyze ' + query))
+            analyze_result = self.cur.fetchall()  
+            return analyze_result 
+        except Exception as e:
+            pass        
+
     def is_query_valid(self, query: str):    
         '''
         Fetches a single row from the database to check if the query is valid.

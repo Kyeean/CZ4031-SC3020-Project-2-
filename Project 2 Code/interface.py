@@ -227,6 +227,7 @@ class Application(ttk.Window):
         '''
 
         preprocessor = explain.Preprocessing(self.configList)
+        db = explain.DBConnection(self.configList)
         isValid = self.query_validation(query, preprocessor)
         title_font = font.Font(family="Helvetica", size=18, weight="bold")
         body_font = font.Font(family="Helvetica", size=14)
@@ -270,10 +271,40 @@ class Application(ttk.Window):
                 self.postgresql_query_plan_text.image_create(END, image=self.query_img)
                 self.postgresql_query_plan_text.config(state=DISABLED)
 
+                self.analysis_text.config(state="normal")
+                self.analysis_text.insert(END, "Analysis:\n", ("title",))
+
+                analysis = db.execute_analyse(query)
+                #test = self.print_analysis(self.analysis_text, query)
+                for i in analysis:
+                    self.analysis_text.insert(END, i , ("body",))
+
+                self.analysis_text.tag_configure("title", font=title_font, underline=True)
+                self.analysis_text.tag_configure("body", font=body_font)
+                self.analysis_text.config(state=DISABLED)
+
+
             except Exception as e:
-                messagebox.showerror("Warning")
+                messagebox.showinfo("Warning")
 
+    def print_analysis(self, container, query):
+            
+        try:
 
+            listToReturn = []
+            body_font = font.Font(family="Helvetica", size=12)
+            container.config(state="normal")
+
+            testprinted = "test"
+            listToReturn.append(testprinted)
+            container.insert(END, testprinted, ("body",))
+
+            self.analysis_text.tag_configure("body", font=body_font)
+            return listToReturn
+        
+        except Exception as e:
+            messagebox.showerror("test")
+    
 
     def query_validation(self, query, preprocessor):
         '''
@@ -287,6 +318,7 @@ class Application(ttk.Window):
             return False
         return True
     
+
     def tableTab(self, query, container):
         '''
         Create table based on query. 
@@ -301,7 +333,7 @@ class Application(ttk.Window):
             child.destroy()  # Clean up sql output
         preprocessor = explain.Preprocessing(self.configList)
 
-        output, columns = preprocessor.get_query_results(query)
+        output, columns, analysis = preprocessor.get_query_results(query)
 
         # Create table in container
         if (output is None or (len(output) == 0)):
@@ -309,6 +341,8 @@ class Application(ttk.Window):
 
         else:
             self.createTableOutput(output, columns, container)
+            
+
 
     def createTableOutput(self, output, columns, container):
         '''
