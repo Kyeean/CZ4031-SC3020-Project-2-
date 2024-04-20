@@ -154,7 +154,7 @@ class Application(ttk.Window):
 
         self.port_label = ttk.Label(self.login_window, text="Port:")
         self.port_entry = ttk.Entry(self.login_window)
-        self.port_entry.insert(0, '5433')
+        self.port_entry.insert(0, '5432')
 
         self.database_label = ttk.Label(self.login_window, text="Database:")
         self.database_entry = ttk.Entry(self.login_window)
@@ -162,11 +162,11 @@ class Application(ttk.Window):
 
         self.user_label = ttk.Label(self.login_window, text="User:")
         self.user_entry = ttk.Entry(self.login_window)
-        self.user_entry.insert(0, 'ernest')
+        self.user_entry.insert(0, '')
 
         self.password_label = ttk.Label(self.login_window, text="Password:")
         self.password_entry = ttk.Entry(self.login_window, show="*")
-        self.password_entry.insert(0,'wxaa12')
+        self.password_entry.insert(0,'')
 
         self.login_button = ttk.Button(self.login_window, text="Login", command=self.login)
 
