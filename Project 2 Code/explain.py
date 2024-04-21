@@ -2,7 +2,7 @@
 Contains code for preprocessing user inputs and data used in algorithm
 '''
 
-import psycopg2
+import psycopg2, re
 from graphviz import Digraph
 
 
@@ -198,7 +198,17 @@ class DBConnection:
           return analyze_result
         except Exception as e:
             pass        
-
+    
+    def compareRow(self, compareText):
+        numbers = re.findall(r'\d+', compareText)
+        estimated_row = int(numbers[0])
+        actual_rows = int(numbers[1])
+        if actual_rows <= estimated_row:
+            return "As the actual rows accessed is smaller than the actual rows, it can be inferred that the actual cost needed to perform this query is smaller than the estimated cost."
+        else:
+            return "The actual cost can be inferred to be more than the estimated costs, this suggest that the query plan chosen is not the ideal query plan."
+        
+    
     def is_query_valid(self, query: str):    
         '''
         Fetches a single row from the database to check if the query is valid.
