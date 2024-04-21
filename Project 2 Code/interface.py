@@ -254,8 +254,8 @@ class Application(ttk.Window):
 
                 imgQuery = Image.open(image_path)
 
-                gui_width = self.postgresql_query_plan_text.winfo_width() - 50
-                gui_height = self.postgresql_query_plan_text.winfo_height() - 50
+                gui_width = self.postgresql_query_plan_text.winfo_width() - 100
+                gui_height = self.postgresql_query_plan_text.winfo_height() - 100
 
                
 
@@ -300,6 +300,9 @@ class Application(ttk.Window):
                 print(comparisonText)
                 self.analysis_text.insert(END, '\n' + comparisonText, ("body",))"""
                 
+                self.analysis_text.insert(END, "\n" + "Cost Analysis", ("title",))
+                cost_analysis = self.printCostAnalysis(analysisList)
+                self.analysis_text.insert(END, "\n" + cost_analysis, ("body",))
                 
 
                 self.analysis_text.tag_configure("title", font=title_font, underline=True)
@@ -322,11 +325,14 @@ class Application(ttk.Window):
         return timeTakenstr
 
     def printAnalysis(self, query):
-
         db = explain.DBConnection(self.configList)
         analysis = db.execute_row_analyse(query)
         return analysis    
 
+    def printCostAnalysis(self, cost_text):
+        db = explain.DBConnection(self.configList)
+        cost_analysis = db.compareRow(cost_text)
+        return cost_analysis
 
     
               
