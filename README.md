@@ -2,12 +2,17 @@
 Project repository for CZ4031 Database System Design Project 2
 
 # Running the code
-1) Install the requirements in requirements.txt file by running the command below:
+1) Creating a virtual environment in the project folder, CZ4031-SC3020-Project-2- folder.
+   
+   ```python -m venv venv```
+3) Activating the virtual environment
+   
+   ```.\venv\Scripts\activate```
+5) Install the requirements in requirements.txt file by running the command below:
+   
+   ```pip install -r requirements.txt```
 
-   ```pip install -r requirements.txt``` <br>
-
-
-1) Download Graphviz from the following link:
+7) Download Graphviz from the following link:
 
     https://graphviz.org/download/
 
@@ -29,10 +34,10 @@ Project repository for CZ4031 Database System Design Project 2
 
 2) Run the project.py file
     
-    ```python project.py```
+    ```python '.\Project 2 Code\project.py'```
 
 
-3) Prior to querying, ensure that you log in and establish a connection to the database through the pop-up login window.
+3) Log in with your PostgreSQL details to establish a connection to the database through the pop-up login window.
 
 
 4) After you've logged in successfully, go ahead and use our program!
