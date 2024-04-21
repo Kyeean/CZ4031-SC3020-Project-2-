@@ -110,7 +110,7 @@ class Application(ttk.Window):
         self.analysis_container.pack(fill=tk.BOTH)
         self.tabs_holders.add(self.analysis_container, text="Analysis")
 
-        self.analysis_label = Label(self.analysis_container, text="What has changed and why:", font=FONT_NORMAL)
+        self.analysis_label = Label(self.analysis_container, text="Cost Analysis:", font=FONT_NORMAL)
         self.analysis_label.configure(background='#2C3143', foreground='white')
         self.analysis_label.pack(pady=20)
         self.analysis_text = Text(self.analysis_container, width=70, height=50, wrap="word")
@@ -126,6 +126,7 @@ class Application(ttk.Window):
 
         self.login_window = Toplevel(self.window_container)
         self.login_window.title("Login")
+        self.login_window.transient(self.window_container)
         self.login_window.grab_set()
         width = 270
         height = 270
@@ -142,19 +143,16 @@ class Application(ttk.Window):
 
         self.port_label = ttk.Label(self.login_window, text="Port:")
         self.port_entry = ttk.Entry(self.login_window)
-        self.port_entry.insert(0, '5433')
+        self.port_entry.insert(0, '5432')
 
         self.database_label = ttk.Label(self.login_window, text="Database:")
         self.database_entry = ttk.Entry(self.login_window)
-        self.database_entry.insert(0,'TPC-H')
 
         self.user_label = ttk.Label(self.login_window, text="User:")
         self.user_entry = ttk.Entry(self.login_window)
-        self.user_entry.insert(0, 'postgres')
 
         self.password_label = ttk.Label(self.login_window, text="Password:")
         self.password_entry = ttk.Entry(self.login_window, show="*")
-        self.password_entry.insert(0,'wxaa12')
 
         self.login_button = ttk.Button(self.login_window, text="Login", command=self.login)
 
