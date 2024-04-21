@@ -1,0 +1,39 @@
+Query lifted from https://www.tpc.org/TPC_Documents_Current_Versions/pdf/TPC-H_v3.0.1.pdf
+
+select l_orderkey, sum(l_extendedprice*(1-l_discount)) as revenue, o_orderdate, o_shippriority
+from customer, orders, lineitem
+where c_mktsegment = 'BUILDING' and c_custkey = o_custkey and l_orderkey = o_orderkey and o_orderdate < date ' 1995-03-15' and l_shipdate > date ' 1995-03-15'
+group by l_orderkey, o_orderdate, o_shippriority
+order by revenue desc, o_orderdate;
+
+Simple Queries:
+
+SELECT o.*, l.* FROM orders o JOIN lineitem l ON o.o_orderkey = l.l_orderkey;
+
+SELECT o.o_orderkey, SUM(l.l_extendedprice * (1 - l.l_discount)) AS total_price FROM orders o JOIN lineitem l ON o.o_orderkey = l.l_orderkey GROUP BY o.o_orderkey;
+
+
+SELECT c.* FROM customer c LEFT JOIN orders o ON c.c_custkey = o.o_custkey WHERE o.o_custkey IS NULL;
+
+SELECT c.c_custkey, c.c_name, SUM(l.l_extendedprice * (1 - l.l_discount)) AS total_order_value FROM customer c JOIN orders o ON c.c_custkey = o.o_custkey JOIN lineitem l ON o.o_orderkey = l.l_orderkey GROUP BY c.c_custkey, c.c_name ORDER BY total_order_value DESC
+
+
+SELECT o.* FROM orders o JOIN customer c ON o.o_custkey = c.c_custkey JOIN nation n ON c.c_nationkey = n.n_nationkey
+
+
+Complex Queries:
+
+SELECT o.o_orderkey, c.c_name, n.n_name, s.s_name, li.l_extendedprice, li.l_discount FROM public.orders o JOIN public.customer c ON o.o_custkey = c.c_custkey JOIN public.lineitem li ON o.o_orderkey = li.l_orderkey JOIN public.supplier s ON li.l_suppkey = s.s_suppkey JOIN public.nation n ON s.s_nationkey = n.n_nationkey ORDER BY o.o_orderkey, li.l_extendedprice DESC;
+
+
+SELECT c.c_mktsegment, AVG(c.c_acctbal) AS average_balance FROM public.customer c GROUP BY c.c_mktsegment HAVING AVG(c.c_acctbal) > 1000
+
+
+
+SELECT EXTRACT(YEAR FROM li.l_shipdate) AS year, EXTRACT(MONTH FROM li.l_shipdate) AS month, SUM(li.l_extendedprice * (1 - li.l_discount)) AS total_sales FROM public.lineitem li WHERE li.l_partkey = 123 GROUP BY year, month ORDER BY year, month;
+
+
+SELECT p.p_name, s.s_name FROM public.part p JOIN public.partsupp ps ON p.p_partkey = ps.ps_partkey JOIN public.supplier s ON ps.ps_suppkey = s.s_suppkey LEFT JOIN public.lineitem li ON ps.ps_partkey = li.l_partkey AND ps.ps_suppkey = li.l_suppkey WHERE li.l_orderkey IS NULL;
+
+
+SELECT r.r_name AS region, s.s_name AS supplier, AVG(ps.ps_supplycost) AS avg_supply_cost FROM public.region r JOIN public.nation n ON r.r_regionkey = n.n_regionkey JOIN public.supplier s ON n.n_nationkey = s.s_nationkey JOIN public.partsupp ps ON s.s_suppkey = ps.ps_suppkey GROUP BY r.r_name, s.s_name ORDER BY r.r_name, avg_supply_cost DESC FETCH FIRST 5 ROWS ONLY;
