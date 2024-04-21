@@ -178,12 +178,16 @@ class DBConnection:
             for item in analyze_result:
                 for inner_list in item:
                     for dictionary in inner_list:
-                        for plan in dictionary['Plan']['Plans']:
-                            plan_test.append({'Plan Rows': plan['Plan Rows'], 'Actual Rows': plan['Actual Rows']})
+                        if 'Plans' in dictionary['Plan']:  # Check if there are nested plans
+                            for plan in dictionary['Plan']['Plans']:
+                                plan_test.append({'Plan Rows': plan['Plan Rows'], 'Actual Rows': plan['Actual Rows']})
+                        else:
+                # Trivial case with only one plan
+                            plan_test.append({'Plan Rows': dictionary['Plan']['Plan Rows'], 'Actual Rows': dictionary['Plan']['Actual Rows']})
             output = ""
             for item in plan_test:
                 output += f"The estimated rows to be accessed is {item['Plan Rows']}\n"
-                output += f"The actual rows accessed is {item['Actual Rows']}\n"        
+                output += f"The actual rows accessed is {item['Actual Rows']}\n"       
             return output
         except Exception as e:
             pass    
