@@ -164,15 +164,36 @@ class DBConnection:
             return query_results, column_names
         except Exception as e:
             pass
-
+    
+    def execute_row_analyse(self, query: str):
+        '''
+        Executes the query with explain analyze on the database and returns the rows accessed
+        '''
+        try:
+            self.cur.execute(self.cur.mogrify('explain (analyze, FORMAT json)' + query))
+            analyze_result = self.cur.fetchall()  
+            plan_test = []
+            for item in analyze_result:
+                for inner_list in item:
+                    for dictionary in inner_list:
+                        for plan in dictionary['Plan']['Plans']:
+                            plan_test.append({'Plan Rows': plan['Plan Rows'], 'Actual Rows': plan['Actual Rows']})
+            output = ""
+            for item in plan_test:
+                output += f"The estimated rows to be accessed is {item['Plan Rows']}\n"
+                output += f"The actual rows accessed is {item['Actual Rows']}\n"        
+            return output
+        except Exception as e:
+            pass    
+    
     def execute_analyse(self, query: str):
         '''
         Executes a query with "explain analyze" on the database and returns the actual time that it will take to execute the query.
         '''
         try:
-            self.cur.execute(self.cur.mogrify('explain analyze ' + query))
-            analyze_result = self.cur.fetchall()  
-            return analyze_result 
+          self.cur.execute(self.cur.mogrify('explain analyze ' + query))
+          analyze_result = self.cur.fetchall()
+          return analyze_result
         except Exception as e:
             pass        
 
