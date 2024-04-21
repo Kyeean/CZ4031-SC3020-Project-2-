@@ -21,7 +21,7 @@ class GraphGeneration():
         self.graph = Digraph(graph_attr=graph_attribute, node_attr=node_attribute)
         
     
-    def build_dot(self, qep, parent=None, seq=1):
+    def build_nodes(self, qep, parent=None, seq=1):
         '''
         Recursive method to build the graph.
         
@@ -164,8 +164,6 @@ class DBConnection:
             return query_results, column_names
         except Exception as e:
             pass
-    
-    
 
     def execute_row_analyse(self, query: str):
         '''
