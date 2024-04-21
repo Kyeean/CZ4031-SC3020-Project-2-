@@ -292,11 +292,16 @@ class Application(ttk.Window):
                 
                 self.analysis_text.insert(END, "\n")
                 self.analysis_text.insert(END, "\n")
+
                 #rows accessed function
                 self.analysis_text.insert(END, "\n" + 'Rows Accessed' , ("title",))
                 analysisList = self.printAnalysis(query)
                 self.analysis_text.insert(END, "\n" + analysisList,("body",))
-
+                
+                """comparisonText = self.comparison(analysisList)
+                print(comparisonText)
+                self.analysis_text.insert(END, '\n' + comparisonText, ("body",))"""
+                
                 
 
                 self.analysis_text.tag_configure("title", font=title_font, underline=True)
@@ -323,9 +328,10 @@ class Application(ttk.Window):
         db = explain.DBConnection(self.configList)
         analysis = db.execute_row_analyse(query)
         return analysis    
-       
+
+
     
-                 
+              
     def printJoin(self, join_dict, scan_dict, container):
         '''
          Prints out the joins in a query.

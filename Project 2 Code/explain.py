@@ -165,6 +165,8 @@ class DBConnection:
         except Exception as e:
             pass
     
+    
+
     def execute_row_analyse(self, query: str):
         '''
         Executes the query with explain analyze on the database and returns the rows accessed
