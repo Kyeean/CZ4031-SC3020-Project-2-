@@ -142,7 +142,7 @@ class Application(ttk.Window):
 
         self.port_label = ttk.Label(self.login_window, text="Port:")
         self.port_entry = ttk.Entry(self.login_window)
-        self.port_entry.insert(0, '5432')
+        self.port_entry.insert(0, '5433')
 
         self.database_label = ttk.Label(self.login_window, text="Database:")
         self.database_entry = ttk.Entry(self.login_window)
@@ -154,7 +154,7 @@ class Application(ttk.Window):
 
         self.password_label = ttk.Label(self.login_window, text="Password:")
         self.password_entry = ttk.Entry(self.login_window, show="*")
-        self.password_entry.insert(0,'12345')
+        self.password_entry.insert(0,'wxaa12')
 
         self.login_button = ttk.Button(self.login_window, text="Login", command=self.login)
 
@@ -283,10 +283,21 @@ class Application(ttk.Window):
 
                 cost = explain.CalculateCost().printCost(QueryPlan)
                 self.analysis_text.insert(END, cost, ("body",))
-
+                
+                #time accessed function
+                timeAnalysisList = self.printTimeAnalysis(query) 
+                self.analysis_text.insert(END, "\n" + 'Planning time and Execution TIme' , ("title",))
+                for timeTaken in timeAnalysisList:
+                   self.analysis_text.insert(END, "\n Actual " + timeTaken, ("body",))
+                
+                self.analysis_text.insert(END, "\n")
+                
+                #rows accessed function
+                self.analysis_text.insert(END, "\n" + 'Rows Accessed' , ("title",))
                 analysisList = self.printAnalysis(query)
-                for timeTaken in analysisList:
-                    self.analysis_text.insert(END, "\n Actual " + timeTaken + "\n", ("body",))
+                self.analysis_text.insert(END, "\n" + analysisList,("body",))
+
+                
 
                 self.analysis_text.tag_configure("title", font=title_font, underline=True)
                 self.analysis_text.tag_configure("body", font=body_font)
@@ -296,8 +307,7 @@ class Application(ttk.Window):
                 messagebox.showinfo("Warning")
                 print(traceback.format_exc())
 
-    def printAnalysis(self, query):
-
+    def printTimeAnalysis(self,query):
         db = explain.DBConnection(self.configList)
         analysis = db.execute_analyse(query)
         timeTakenstr = []
@@ -307,6 +317,14 @@ class Application(ttk.Window):
                 if k.__contains__("Planning Time") == True or k.__contains__("Execution Time") == True:
                     timeTakenstr.append(k)
         return timeTakenstr
+
+    def printAnalysis(self, query):
+
+        db = explain.DBConnection(self.configList)
+        analysis = db.execute_row_analyse(query)
+        return analysis    
+       
+    
                  
     def printJoin(self, join_dict, scan_dict, container):
         '''
