@@ -7,6 +7,7 @@ from ttkbootstrap.constants import *
 import explain
 from PIL import ImageTk, Image
 from ttkbootstrap.tableview import Tableview
+import traceback
 
 # Fonts
 FONT_TITLE = ("Helvetica", 18)
@@ -149,11 +150,11 @@ class Application(ttk.Window):
 
         self.user_label = ttk.Label(self.login_window, text="User:")
         self.user_entry = ttk.Entry(self.login_window)
-        self.user_entry.insert(0, '')
+        self.user_entry.insert(0, 'postgres')
 
         self.password_label = ttk.Label(self.login_window, text="Password:")
         self.password_entry = ttk.Entry(self.login_window, show="*")
-        self.password_entry.insert(0,'')
+        self.password_entry.insert(0,'12345')
 
         self.login_button = ttk.Button(self.login_window, text="Login", command=self.login)
 
@@ -217,9 +218,8 @@ class Application(ttk.Window):
         '''
         Display the query plans and analysis
         '''
-
+        
         preprocessor = explain.Preprocessing(self.configList)
-        db = explain.DBConnection(self.configList)
         isValid = self.query_validation(query, preprocessor)
         title_font = font.Font(family="Helvetica", size=18, weight="bold")
         body_font = font.Font(family="Helvetica", size=14)
@@ -277,14 +277,16 @@ class Application(ttk.Window):
                 self.analysis_text.config(state="normal")
                 self.analysis_text.insert(END, "Query Plan Analysis:\n", ("title",))
 
-                #analysis = db.execute_analyse(query)
-                self.printAnalysis(QueryPlan)
+                searchFunction = explain.SearchNode()
+                joinResults, scanResults = searchFunction.searchJoin(QueryPlan)
+                self.printJoin(joinResults, scanResults, self.analysis_text)
+
                 cost = explain.CalculateCost().printCost(QueryPlan)
                 self.analysis_text.insert(END, cost, ("body",))
-                #for i in analysis:
-                    #for j in i:
-                        #jstring = str(j)
-                        #self.analysis_text.insert(END, jstring + "\n", ("body",))
+
+                analysisList = self.printAnalysis(query)
+                for timeTaken in analysisList:
+                    self.analysis_text.insert(END, "\n Actual " + timeTaken + "\n", ("body",))
 
                 self.analysis_text.tag_configure("title", font=title_font, underline=True)
                 self.analysis_text.tag_configure("body", font=body_font)
@@ -292,14 +294,20 @@ class Application(ttk.Window):
 
             except Exception as e:
                 messagebox.showinfo("Warning")
+                print(traceback.format_exc())
 
     def printAnalysis(self, query):
 
-        searchFunction = explain.SearchNode()
-        joinResults, scanResults = searchFunction.searchJoin(query)
-        self.printJoin(joinResults, scanResults, self.analysis_text)
-
-
+        db = explain.DBConnection(self.configList)
+        analysis = db.execute_analyse(query)
+        timeTakenstr = []
+        for i in analysis:
+            for j in i:
+                k = str(j)
+                if k.__contains__("Planning Time") == True or k.__contains__("Execution Time") == True:
+                    timeTakenstr.append(k)
+        return timeTakenstr
+                 
     def printJoin(self, join_dict, scan_dict, container):
         '''
          Prints out the joins in a query.
