@@ -291,7 +291,7 @@ class Application(ttk.Window):
                    self.analysis_text.insert(END, "\n Actual " + timeTaken, ("body",))
                 
                 self.analysis_text.insert(END, "\n")
-                
+                self.analysis_text.insert(END, "\n")
                 #rows accessed function
                 self.analysis_text.insert(END, "\n" + 'Rows Accessed' , ("title",))
                 analysisList = self.printAnalysis(query)
