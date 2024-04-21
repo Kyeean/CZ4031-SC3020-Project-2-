@@ -207,8 +207,6 @@ class DBConnection:
         numbers = re.findall(r'\d+', compareText)
         estimated_row = int(numbers[0])
         actual_rows = int(numbers[1])
-        print(estimated_row)
-        print(actual_rows)
         if actual_rows < estimated_row:
             return "As the actual rows accessed is smaller than the actual rows, it can be inferred that the actual cost needed to perform this query is smaller than the estimated cost."
         elif actual_rows == estimated_row:
