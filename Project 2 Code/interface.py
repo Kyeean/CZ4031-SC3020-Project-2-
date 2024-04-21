@@ -95,26 +95,13 @@ class Application(ttk.Window):
         self.query_container = ttk.Frame(self.tabs_holders, borderwidth=0)
         self.query_container.pack(fill=tk.BOTH)
         self.tabs_holders.add(self.query_container, text="Query Plan")
-
         self.postgresql_subframe = ttk.Frame(self.query_container, borderwidth=0)
-        #self.theory_subframe2 = ttk.Frame(self.query_container, borderwidth=0)
-
         self.postgresql_query_plan_label = Label(self.postgresql_subframe, text="Query Execution Plan", font=FONT_UNDERLINE)
         self.postgresql_query_plan_label.configure(background='#2C3143', foreground='white')
         self.postgresql_query_plan_label.pack(padx=0, pady=(10,0), expand=True, fill=BOTH)
         self.postgresql_query_plan_text = Text(self.postgresql_subframe, width=40, height=80, wrap="word")
         self.postgresql_query_plan_text.pack(padx = 10, pady= 10, expand=True, fill=BOTH)
-
-        """
-        self.theory_query_plan_label = Label(self.theory_subframe2, text="Theoretical Analysis:", font=FONT_UNDERLINE)
-        self.theory_query_plan_label.configure(background='#2C3143', foreground='white')
-        self.theory_query_plan_label.pack(padx=20, pady=20, expand=True, fill=BOTH)
-        self.theory_query_plan_text = Text(self.theory_subframe2, width=40, height=50, wrap="word")
-        self.theory_query_plan_text.pack(padx=10, pady=10, expand=True, fill=BOTH)
-        """
-
         self.postgresql_subframe.pack(expand=True, fill=BOTH, side=LEFT)
-        #self.theory_subframe2.pack(expand=True, fill=BOTH, side=LEFT)
 
         # Analysis Tab
 
