@@ -231,7 +231,7 @@ class CalculateCost:
         '''
 
         total_cost = self.calculateCost(plan)
-        total_cost_string = f"\nThe estimated cost of this plan is {total_cost}.\n"
+        total_cost_string = f"\nThe estimated cost of this query plan is {total_cost}.\n"
         return str(total_cost_string)
 
     

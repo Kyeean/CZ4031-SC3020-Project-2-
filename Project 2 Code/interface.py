@@ -288,7 +288,7 @@ class Application(ttk.Window):
                 self.postgresql_query_plan_text.config(state=DISABLED)
 
                 self.analysis_text.config(state="normal")
-                self.analysis_text.insert(END, "Analysis:\n", ("title",))
+                self.analysis_text.insert(END, "Query Plan Analysis:\n", ("title",))
 
                 #analysis = db.execute_analyse(query)
                 self.printAnalysis(QueryPlan)
